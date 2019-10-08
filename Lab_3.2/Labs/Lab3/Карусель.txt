@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main(){
+
+    double k = 2;
+    double x = 16;
+    double d = 1;
+    double y = 1;
+    double e = 0.1;
+
+    while(d >= e){
+        y = y + d;
+        printf("%lf \n" , y);
+        //d = ( x / pow(y,k-1) - y ) / k;
+        d = ((k-1) * y + x/pow(y,k-1) ) / k;
+        printf("%lf \n", d);
+    }
+
+}

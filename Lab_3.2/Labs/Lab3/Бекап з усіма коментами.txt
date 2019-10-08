@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main(){
+
+    double k = 2;
+    double x = 175.721536;
+    double d = 1;
+    double y = 1;
+    double a = 0;
+    double b = 1;
+    double c = 1;
+    double e = 0.00001;
+    double before;
+    double after;
+
+    double i = 1;
+
+    //scanf("%ld" , &x);
+    //scanf("%d" , &k);
+    //scanf("%ld" , &e);
+
+
+    //printf("%lf", ( x / pow(y,k-1) - y ) / k);
+
+    //Якщо числа після коми з заданою точністб не змінюються за ітерацію значить корінь порахований
+    i = 0;
+    while(1){
+
+        y = ((k-1) * y + x/pow(y,k-1) ) / k;
+        //printf("%f", y);
+
+        b = a;
+        //printf("%f \n", b);
+
+        /*b = modf(y, &c);
+        b = round(b / e) * e;*/
+        //printf("%f \n b = ", b);
+
+        a = round(y / e) * e;
+        //printf("%f \n", a);
+        /*i++;
+        if(i == 20){
+            printf("i == 20");
+            break;
+        }*/
+        if(a == b){
+            printf("%f \n", y);
+            break;
+        }
+        //printf("%f \n a = ", a);
+
+        /*if(a == (b + c)){
+            y = ((k-1) * y + x/pow(y,k-1) ) / k;
+            //printf("%f \n y = ", y);
+            b = modf(y, &c);
+            b = round(b / e) * e;
+            //printf("%f \n b = ", b);
+
+            a = round(y / e) * e;
+            //printf("%f \n a = ", a);
+            if(a == y){
+                printf("%f \n", y);
+                break;
+            }
+
+        }*/
+
+        /*a = modf(y, &b);
+        a = round(a / e) * e;
+
+        before = a + b;*/
+
+
+        /*c = modf(y, &d);
+        c = round(c / e) * e;
+
+        after = c + d;*/
+
+    }
+
+
+
+    getch();
+}
