@@ -40,37 +40,41 @@ int main()
         }
 
 
-        /*printf("Enter b: \n");
+        printf("Enter b: \n");
         scanf("%s", &b_1);
-        b = atoi(b_1);
+        b = atof(b_1);
+        printf("b = %lf", b);
         int length_2 = strlen(b_1);
-        for (i = 0; i < length_1; i++)
-            if (isdigit(b_1[i])){
-                b_check += 1;
-                break;
-            }
-            else
-                b_check = 0;
-        if(b_check == length_1 -1){
+        for (i = 0; i < length_2; i++){
+                j = b_1[i];
+                if (j == 45 || j == 46 || isdigit(b_1[i])){
+                    b_check += 1;
+                }
+                else
+                    continue;
+        }
+
+        if(b_check == length_1){
             b_check_1 = 1;
         }
 
         printf("Enter c: \n");
         scanf("%s", &c_1);
-        c = atoi(c_1);
+        c = atof(c_1);
+        printf("c = %lf", c);
         int length_3 = strlen(c_1);
-        for (i = 0; i < length_1; i++)
-            if (isdigit(c_1[i])){
-                c_check += 1;
-                break;
-            }
-            else
-                c_check = 0;
-        if(c_check == length_1 - 1){
-            c_check_1 = 1;
+        for (i = 0; i < length_3; i++){
+                j = c_1[i];
+                if (j == 45 || j == 46 || isdigit(c_1[i])){
+                    c_check += 1;
+                }
+                else
+                    continue;
         }
 
-        */
+        if(c_check == length_1){
+            c_check_1 = 1;
+        }
 
         if(a_check_1 == 1 || b_check_1 == 1 || c_check_1 == 1){
             break;
@@ -79,7 +83,6 @@ int main()
             printf("Try another value \n");
         }
     }
-    /*
 
     p = b - (pow(a,2) / 3);
     q = (2 * pow(a,3) / 27) - a * b / 3 + c;
@@ -123,6 +126,6 @@ int main()
         printf("%lf", 2 * abs(cbrt(r)) * cos((f + 2 * M_PI)/3));
         printf("%lf", 2 * abs(cbrt(r)) * cos((f + 4 * M_PI)/3));
     }
-    */
+
     return 0;
 }
