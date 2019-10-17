@@ -119,13 +119,23 @@ int main()
     sin_x = 1;
     cos_x = 1;
 
-    /*while(x < x_2){// коли зміна синуса менша за точність то все пораховано
+    printf("X is");
+    printf("        Sin x Taylor is");
+    printf("        Sin(x) is");
+    printf("        Sin x Taylor - sin(x)  is \n");
+    while(x < x_2){
         x = x + d_x;
         d = d * ((-1 * x * x) / ((n + 1) * (n + 2)));
         sin_x = sin_x + d;
         n = n + 2;
         sin_x_f = sin(x);
-    }*/
+        printf("%lf", x * 180 / M_PI);
+        printf("        %lf", round(sin_x/e)*e);
+        printf("        %lf", round(sin_x_f/e)*e);
+        printf("        %lf \n", fabs(sin_x - sin_x_f));
+    }
+
+    printf("\n \n \n");
 
     x = x_1;
     n = 1;
