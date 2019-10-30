@@ -101,7 +101,8 @@ int main()
             check_4 = 1;
         }
 
-        if(check_1 == 1 && check_1 == 1 && check_1 == 1 && check_4 == 1){
+        /*(((x_1 < x_2) && d_x > 0) || ((x_1 > x_2) && d_x < 0))*/
+        if(check_1 == 1 && check_2 == 1 && check_3 == 1 && check_4 == 1 && e > 0 && d_x > 0){
             break;
         }else{
             system("cls");

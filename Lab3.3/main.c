@@ -24,7 +24,7 @@ int main()
         printf("Enter a: \n");
         scanf("%s", &a_1);
         a = atof(a_1);
-        printf("a = %lf", a);
+        //printf("a = %lf", a);
         int length_1 = strlen(a_1);
         for (i = 0; i < length_1; i++){
                 j = a_1[i];
@@ -43,7 +43,7 @@ int main()
         printf("Enter b: \n");
         scanf("%s", &b_1);
         b = atof(b_1);
-        printf("b = %lf", b);
+        //printf("b = %lf", b);
         int length_2 = strlen(b_1);
         for (i = 0; i < length_2; i++){
                 j = b_1[i];
@@ -61,7 +61,7 @@ int main()
         printf("Enter c: \n");
         scanf("%s", &c_1);
         c = atof(c_1);
-        printf("c = %lf", c);
+        //printf("c = %lf", c);
         int length_3 = strlen(c_1);
         for (i = 0; i < length_3; i++){
                 j = c_1[i];
@@ -100,13 +100,13 @@ int main()
         //y_2 = -1*(u + v) / 2 + sqrt(-1) * sqrt(3) * (u - v) / 2;
         //y_3 = -1*(u + v) / 2 - sqrt(-1) * sqrt(3) * (u - v) / 2;
 
-        printf("%lf", y_1 , "\n");
+        printf("%lf", y_1 - a/3, "\n");
         printf("\n");
-        printf("%lf", -1*(u + v) / 2);
+        printf("%lf", (-1*(u + v) / 2) - a/3);
         printf(" + i * ");
         printf("%lf", sqrt(3) * (u - v) / 2);
         printf("\n");
-        printf("%lf", -1*(u + v) / 2);
+        printf("%lf", (-1*(u + v) / 2) - a/3);
         printf(" - i * ");
         printf("%lf", sqrt(3) * (u - v) / 2);
         printf("\n");
@@ -114,17 +114,19 @@ int main()
     }
 
     if( d == 0){
-        printf("%lf", 3 * q / p);
-        printf("%lf", -1 * 3 * q /(2 * p));
+        printf("%lf", (3 * q / p) - a/3);
+        printf("\n");
+        printf("%lf", (-1 * 3 * q /(2 * p)) - a/3);
     }
 
     if(d < 0){
-        r = sqrt(-1 * pow(p,3) / 27);
+        r = sqrt(pow(p,3) *(-1) / 27);
         f = acos(-1 * q /(2 * r));
-        printf("%lf", 2 * abs(cbrt(r)) * cos(f/3));
+        printf("%lf", (2 * abs(cbrt(r)) * cos(f/3)) - a/3);
         printf("\n");
-        printf("%lf", 2 * abs(cbrt(r)) * cos((f + 2 * M_PI)/3));
-        printf("%lf", 2 * abs(cbrt(r)) * cos((f + 4 * M_PI)/3));
+        printf("%lf", (2 * abs(cbrt(r)) * cos((f + 2 * M_PI)/3)) - a/3);
+        printf("\n");
+        printf("%lf", (2 * abs(cbrt(r)) * cos((f + 4 * M_PI)/3)) - a/3);
     }
 
     return 0;
