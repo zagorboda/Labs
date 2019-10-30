@@ -104,5 +104,6 @@ int main()
     for(i = 0;i < num;i++)
         printf("%.03lf \n", a[i]);
 
+    printf(1245);
     return 0;
 }
