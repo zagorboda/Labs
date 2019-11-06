@@ -5,7 +5,7 @@
 int main()
 {
     int n;
-    double d_x, e, x, d, sin_x, cos_x, cos_x_f, sin_x_f, x_1, x_2;
+    double d_x, e, x, d, sin_x, cos_x, cos_x_f, sin_x_f, x_1, x_2, prv, aft;
     char x_1_1[20] = "";
     char x_2_2[20] = "";
     char d_x_1[20] = "";
@@ -43,9 +43,19 @@ int main()
             check_1 = 1;
         }
 
+        if(check_1 == 1){
+            break;
+        }else{
+            system("cls");
+            printf("Try another value \n");
+        }
+    }
+
+
 
         printf("\n");
 
+    while(1){
         printf("Enter x_2:");
         scanf("%s", &x_2_2);
         x_2 = atof(x_2_2);
@@ -63,8 +73,18 @@ int main()
             check_2 = 1;
         }
 
-        printf("\n");
+        if(check_2 == 1){
+            break;
+        }else{
+            system("cls");
+            printf("Try another value \n");
+        }
 
+    }
+
+    printf("\n");
+
+    while(1){
         printf("Enter d_x:");
         scanf("%s", &d_x_1);
         d_x = atof(d_x_1);
@@ -82,8 +102,18 @@ int main()
             check_3 = 1;
         }
 
+        if(check_3 == 1 && d_x > 0){
+            break;
+        }else{
+            system("cls");
+            printf("Try another value \n");
+        }
+
+    }
+
         printf("\n");
 
+    while(1){
         printf("Enter e:");
         scanf("%s", &e_1);
         e = atof(e_1);
@@ -101,15 +131,25 @@ int main()
             check_4 = 1;
         }
 
-        /*(((x_1 < x_2) && d_x > 0) || ((x_1 > x_2) && d_x < 0))*/
-        if(check_1 == 1 && check_2 == 1 && check_3 == 1 && check_4 == 1 && e > 0 && d_x > 0){
+        printf("e = %lf \n", e);
+
+        if(check_4 == 1 && e > 0){
             break;
         }else{
             system("cls");
             printf("Try another value \n");
         }
-
     }
+
+        /*(((x_1 < x_2) && d_x > 0) || ((x_1 > x_2) && d_x < 0))*/
+        /*if(check_1 == 1 && check_2 == 1 && check_3 == 1 && check_4 == 1 && e > 0 && d_x > 0){
+            break;
+        }else{
+            system("cls");
+            printf("Try another value \n");
+        }*/
+
+
     x_1 = x_1 * M_PI / 180;
     x_2 = x_2 * M_PI / 180;
     d_x = d_x * M_PI / 180;
@@ -120,7 +160,7 @@ int main()
     sin_x = 1;
     cos_x = 1;
 
-    printf("X is");
+    /*printf("X is");
     printf("        Sin x Taylor is");
     printf("        Sin(x) is");
     printf("        Sin x Taylor - sin(x)  is \n");
@@ -134,9 +174,9 @@ int main()
         printf("        %lf", round(sin_x/e)*e);
         printf("        %lf", round(sin_x_f/e)*e);
         printf("        %lf \n", fabs(sin_x - sin_x_f));
-    }
+    }*/
 
-    printf("\n \n \n");
+    //printf("\n \n \n");
 
     x = x_1;
     n = 1;
@@ -146,15 +186,26 @@ int main()
     printf("        Cos(x) is");
     printf("        Cos x Taylor - cos(x)  is \n");
     while(x < x_2){
-        x = x + d_x;
-        d = d * (-1 * x * x / (2 * n * (2 * n - 1)));
-        cos_x = cos_x + d;
-        n = n + 1;
-        cos_x_f = cos(x);
+        n = 1;
+        d = 1;
+        cos_x = 1;
+        while(1){
+            prv = cos_x;
+            d = d * (-1 * x * x / (2 * n * (2 * n - 1)));
+            cos_x = cos_x + d;
+            n = n + 1;
+            cos_x_f = cos(x);
+            //aft = round(cos_x / e)*e;
+            aft = cos_x;
+            if(prv == aft){
+                break;
+            }
+        }
         printf("%lf", x * 180 / M_PI);
         printf("        %lf", round(cos_x/e)*e);
         printf("        %lf", round(cos_x_f/e)*e);
         printf("        %lf \n", fabs(cos_x - cos_x_f));
+        x = x + d_x;
     }
     /*printf("Sin x is %lf \n", round(sin_x/e)*e);
     printf("Sin(x) is %lf \n", round(sin_x_f/e)*e);*/
