@@ -19,6 +19,7 @@ int main()
             break;
         }else{
             system("cls");
+            fflush(stdout);
             printf("Incorrect input. Try another values. \n");
         }
     }
@@ -63,7 +64,6 @@ int main()
 
         if(a_check == length_1){
             a[i] = atof(a_1);
-            printf("%lf \n", a[i]);
             iter_count++;
             i++;
         }else{
@@ -75,35 +75,30 @@ int main()
         }
     }
 
-    for(i=0;i<num;i++){
-        printf("%lf \n", a[i]);
-    }
-
     if(order[0] == '+'){
-        for(i = 0;i < num-1;i++){
-            for(j = i+1;j < num;j++){
-                if(a[j-1] > a[j]){
-                    c = a[j-1];
-                    a[j-1] = a[j];
+        for (i = 0; i < num; ++i){
+            for (j = i + 1; j < num; ++j){
+                if (a[i] > a[j]){
+                    c =  a[i];
+                    a[i] = a[j];
                     a[j] = c;
                 }
             }
         }
     }else{
-        for(i = 0;i < num-1;i++){
-            for(j = i+1;j < num;j++){
-                if(a[j-1] < a[j]){
-                    c = a[j-1];
-                    a[j-1] = a[j];
-                    a[j] = c;
+        for (i = 0; i < num; ++i){
+            for (j = i + 1; j < num; ++j){
+                if (a[i] < a[j]){
+                    c =  a[j];
+                    a[j] = a[i];
+                    a[i] = c;
                 }
             }
         }
     }
 
     for(i = 0;i < num;i++)
-        printf("%.03lf \n", a[i]);
+        printf("%lf \n", a[i]);
 
-    printf(1245);
     return 0;
 }
