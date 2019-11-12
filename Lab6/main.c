@@ -2,11 +2,11 @@
 #include <stdlib.h>
 
 int main(){
-    int n,check,length,i,j,check_4, counter, stop;
+    int n,check,length,i,j,check_4, counter, stop, k, check_sum_1;
     char n_1[100];
     double **a;
     double *x,*b,*xp,*a_1;
-    double a_s=0, delta, e, check_e, k;
+    double a_s=0, delta, e, check_e, a0, check_sum=0;
     char e_1[100];
 
     /*double *xk, *xk1;
@@ -36,7 +36,7 @@ int main(){
             else
                 check += 1;
 
-        if(check == length){
+        if(check == length && atoi(n_1) > 0){
             n = atoi(n_1);
             break;
         }else{
@@ -65,9 +65,7 @@ int main(){
             check_4 = 1;
         }
 
-        printf("e = %lf \n", e);
-
-        if(check_4 == 1 && e > 0){
+        if(check_4 == 1 && e >= 0){
             break;
         }else{
             system("cls");
@@ -126,17 +124,82 @@ int main(){
     x = (double *) calloc (n, sizeof (double));
     a_1 = (double *) calloc (n, sizeof (double));
 
+    while(1){
+        for(i=0;i<n;i++){
+            for(j=0;j<n;j++){
+                while(1){
+                    printf("Enter A[%d][%d] element: ", i, j);
+                    scanf("%s", &e_1);
+                    length = strlen(e_1);
+                    check_e = 0;
+                    for (k = 0; k < length; k++){
+                        if (e_1[k] == 46 || e_1[k] == 45 || isdigit(e_1[k])){
+                            check_e += 1;
+                        }
+                        else
+                            continue;
+                    }
+
+                    if(check_e == length){
+                        a[i][j] = atof(e_1);
+                        break;
+                    }else{
+                        system("cls");
+                        printf("Try another value \n");
+                    }
+                }
+            }
+        }
+
+
+        check_sum_1 = 0;
+        for(i=0;i<n;i++){
+            check_sum = 0;
+            for(j=0;j<n;j++){
+                if(i != j)
+                check_sum += a[i][j];
+            }
+            if(check_sum < a[i][i])
+                check_sum_1 += 1;
+        }
+        if(check_sum_1 == n)
+            break;
+        else{
+            system("cls");
+            printf("For simple iteration method elements of main diagonal must be bigger than sum of elements of this row except element on main diagonal. Try another matrix \n");
+        }
+
+    }
+
+    /*for(i=0;i<n;i++){
+        printf("Enter B[%d] element: ", i);
+        scanf("%lf", &b[i]);
+    }*/
+
     for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            printf("Enter A[%d][%d] element: ", i, j);
-            scanf("%lf", &a[i][j]);
+        while(1){
+            printf("Enter B[%d] element: ", i);
+            scanf("%s", &e_1);
+            length = strlen(e_1);
+            check_e = 0;
+            for (k = 0; k < length; k++){
+                if (e_1[k] == 46 || e_1[k] == 45 || isdigit(e_1[k])){
+                    check_e += 1;
+                }
+                else
+                    continue;
+            }
+
+            if(check_e == length){
+                b[i] = atof(e_1);
+                break;
+            }else{
+                system("cls");
+                printf("Try another value \n");
+            }
         }
     }
 
-    for(i=0;i<n;i++){
-        printf("Enter B[%d] element: ", i);
-        scanf("%lf", &b[i]);
-    }
 
     for(i=0;i<n;i++){
         for(j=0;j<n;j++){
@@ -180,12 +243,9 @@ int main(){
         printf("%lf \n", x[i]);
     }*/
 
-    for(i=0;i<n;i++){
-        xp[i] = b[i] / a[i][i];
-        //printf("xp = %lf \n", xp[i]);
-    }
 
-    for(i=0;i<n;i++){
+
+    /*for(i=0;i<n;i++){
         a_s = 0;
         for(j=0;j<n;j++){
             if(j != i){
@@ -203,10 +263,30 @@ int main(){
             delta = fabs(xp[i] - x[i]);
             xp[i] = x[i];
         }while(delta > e);
-    }
+    }*/
 
     for(i=0;i<n;i++){
-        printf("%lf", x[i]);
+        xp[i] = b[i] / a[i][i];
+    }
+
+    do{
+        for(i=0;i<n;i++){
+            x[i]=0;
+            delta = 0;
+            for(j=0;j<n;j++){
+                if(i!=j)
+                    x[i]+=a[i][j]*xp[j];
+            }
+            x[i] = (b[i]-x[i]) / a[i][i];
+            if(fabs(x[i] - xp[i]) > delta)
+                delta = fabs(x[i] - xp[i]);
+
+            xp[i] = x[i];
+        }
+    }while(delta > e);
+
+    for(i=0;i<n;i++){
+        printf("%lf \n", x[i]);
     }
 
         //counter++;
