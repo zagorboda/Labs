@@ -2,11 +2,11 @@
 #include <stdlib.h>
 
 int main(){
-    int n,check,length,i,j,check_4;
+    int n,check,length,i,j,check_4, counter, stop;
     char n_1[100];
     double **a;
     double *x,*b,*xp,*a_1;
-    double a_s=0, delta=0, e, check_e, k;
+    double a_s=0, delta, e, check_e, k;
     char e_1[100];
 
     /*double *xk, *xk1;
@@ -54,7 +54,7 @@ int main(){
         length = strlen(e_1);
         for (i = 0; i < length; i++){
             j = e_1[i];
-            if (j == 45 || j == 46 || isdigit(e_1[i])){
+            if (j == 46 || isdigit(e_1[i])){
                 check_e += 1;
             }
             else
@@ -147,7 +147,7 @@ int main(){
         printf("\n");
     }
 
-    for(i=0;i<n;i++){
+    /*for(i=0;i<n;i++){
         xp[i] = b[i] / a[i][i];
         printf("xp = %lf \n", xp[i]);
     }
@@ -165,18 +165,100 @@ int main(){
     }
 
 
+
     for(i=0;i<n;i++){
-        do{
-            x[i] = (b[i] - a_1[i]*xp[i]) / a[i][i];
-            delta = abs(x[i] - xp[i]);
-            xp[i] = x[i];
-            printf("delta = %lf", delta);
-        }while(delta > e);
-    }
-    printf("\n");
+            do{
+                x[i] = (b[i] - a_1[i]*xp[i]) / a[i][i];
+                delta = fabs(x[i] - xp[i]);
+                xp[i] = x[i];
+                printf("i = \n %d", i);
+                printf("x = %lf \n", x);
+                printf("delta = %lf \n", delta);
+            }while(delta > e);
+    }printf("\n");
     for(i=0;i<n;i++){
         printf("%lf \n", x[i]);
+    }*/
+
+    for(i=0;i<n;i++){
+        xp[i] = b[i] / a[i][i];
+        //printf("xp = %lf \n", xp[i]);
     }
+
+    for(i=0;i<n;i++){
+        a_s = 0;
+        for(j=0;j<n;j++){
+            if(j != i){
+                a_s += - 1 * a[i][j] / a[i][i];
+                //printf("as = %lf \n", a_s);
+            }
+        }
+        a_1[i] = a_s;
+        //printf("a1 = %lf \n", a_1[i]);
+    }
+
+    for(i=0;i<n;i++){
+        do{
+            x[i] = b[i] / a[i][i]  + a_1[i]*xp[i];
+            delta = fabs(xp[i] - x[i]);
+            xp[i] = x[i];
+        }while(delta > e);
+    }
+
+    for(i=0;i<n;i++){
+        printf("%lf", x[i]);
+    }
+
+        //counter++;
+
+    /*for(i = 0; i < n; i++){
+        xp[i] = b[i] / a[i][i];
+    }
+
+    for(i=0;i<n;i++){
+        a_s = 0;
+        for(j=0;j<n;j++){
+            if(j != i){
+                a_s += a[i][j];
+                //printf("as = %lf \n", a_s);
+            }
+        }
+        a_1[i] = a_s;
+        //printf("a1 = %lf \n", a_1[i]);
+    }
+
+    for(i=0;i<n;i++){
+        for(j = 0; j < n; j++){
+            xp[i] = xp[i] + (a[i][j] * x[j]);
+        }
+    }
+
+    for(i = 0; i < n; i++){
+        do{
+            x[i] = (b[i] - xp[i]) / a[i][i];
+            delta = fabs(xp[i] - x[i]);
+            xp[i] = x[i];
+        }while(delta > e);
+    }
+
+    for(i = 0; i < n; i++){
+        printf("%lf", x[i]);
+    }
+    printf("Hello");*/
+    //delta = 0;
+
+    /*for(i = 0; i < n; i++){
+        if(fabs(x[i] - xp[i]) > delta){
+            delta = fabs(x[i] - xp[i]);
+        }
+        x[i] = xp[i];
+    }*/
+
+    /*if (counter>1000){
+        printf(">>>This system can't be solved with this method!!!\n");
+        stop = 0;
+        }*/
+
 
 
     for ( i = 0; i < n; i++)
