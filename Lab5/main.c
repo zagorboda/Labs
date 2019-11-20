@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include<string.h>
 
+void sort(char **a,char **b);
+
 int main(){
     int m,n;
     char a[100];
@@ -61,7 +63,7 @@ int main(){
     char *c;
 
     for (i=0;i<=m;i++){
-        fgets (list[i], 100, stdin);
+        fgets (list[i], n, stdin);
     }
 
     for (i=1; i<=m; i++)
@@ -72,23 +74,26 @@ int main(){
     }
     printf("\n");
 
-    for(i = 1;i <= m-1;i++){
+    for (i=1;i<m;i++){
         for(j = i+1;j <= m;j++){
-            if(strcmp(addr[j-1], addr[j]) > 0){
-                c = addr[j-1];
-                addr[j-1] = addr[j];S
-                addr[j] = c;
+            if(strcmp(addr[i], addr[j]) > 0){
+                sort(&addr[i],&addr[j]);
             }
         }
     }
+
     printf("\n");
 
     for (i=1;i<=m;i++){
         printf("List[%d] = %s \n", i, addr[i]);
     }
 
-    free (addr);
-    free (c);
-
     return 0;
+}
+
+void sort(char **a,char **b){
+	char *c;
+	c=*a;
+	*a=*b;
+	*b=c;
 }
