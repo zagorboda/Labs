@@ -13,13 +13,40 @@ struct scheme{
 //struct scheme *p;
 
 void calculate(func, f_min, f_max, d_f){
+    printf("f_0 = %lf\n\n", 1/(2*M_PI*sqrt(S.L*S.C)));
     while(f_min <= f_max){
         switch(func){
             case '1':
+                printf("f = %d \n\n", f_min);
                 printf("\t%lf - i*%lf \n", S.L/S.C, S.r/(S.C*2*M_PI*f_min));
-                printf("Z = \t--------------------\n");
+                printf("Z (%d) = --------------------\n", f_min);
                 printf("\t%lf + i*%lf\n", S.r, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
                 printf("\n\n");
+                break;
+
+            case '2':
+                printf("f = %d \n\n", f_min);
+                printf("\t%lf + i*%lf \n", S.L/S.C, S.r/(S.C*2*M_PI*f_min));
+                printf("Z (%d) = --------------------\n", f_min);
+                printf("\t%lf + i*%lf\n", S.r, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
+                printf("\n\n");
+                break;
+
+            case '3':
+                printf("f = %d \n\n", f_min);
+                printf("\t%lf + i*%lf \n", S.r1*S.r2, S.r1*(2*M_PI*f_min*S.L - 1/S.C*2*M_PI*f_min));
+                printf("Z (%d) = --------------------\n", f_min);
+                printf("\t%lf + i*%lf\n", S.r1 + S.r2, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
+                printf("\n\n");
+                break;
+
+            case '4':
+                printf("f = %d \n\n", f_min);
+                printf("\t%lf + i*%lf \n", S.r1*S.r2 + S.L/S.C, (2*M_PI*f_min*S.L*S.r1 - S.r2/S.C*2*M_PI*f_min));
+                printf("Z (%d) = --------------------\n", f_min);
+                printf("\t%lf + i*%lf\n", S.r1 + S.r2, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
+                printf("\n\n");
+                break;
         }
         f_min += d_f;
     }
@@ -61,6 +88,8 @@ int main(){
     S.C = C;*/
 
     calculate(func, f_min, f_max, d_f);
+
+    getch();
 
     return 0;
 }
