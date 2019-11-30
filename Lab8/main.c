@@ -46,7 +46,6 @@ double float_check(){
                 check += 1;
                 if(num[i] == 46)
                     dot += 1;
-                printf("%c \n", num[i]);
             }
             else
                 break;

@@ -10,25 +10,88 @@ double func2(float c, float t){
     return (sin(log(c) - cos(log(c)) + t*log(c)));
 }
 
+int int_check(){
+    char num[100];
+    int i,check;
+    while(1){
+        check = 0;
+        scanf("%s", &num);
+            for (i = 0; i < strlen(num); i++){
+                if (isdigit(num[i])){
+                    check += 1;
+                }
+                else
+                    break;
+            }
+
+            if(check == strlen(num) && atoi(num) >= 0){
+                return atoi(num);
+                break;
+            }else{
+                printf("Incorrect input. Try another value \n");
+            }
+    }
+}
+
+double float_check(){
+    char num[100];
+    int i,check,minus,dot;
+
+    while(1){
+        dot = 0;
+        check = 0;
+        minus = 0;
+        scanf("%s", &num);
+        for (i = 0; i < strlen(num); i++){
+            if ((num[i] == 45 || num[i] == 46 || isdigit(num[i])) && dot <=1 && minus <=1){
+                check += 1;
+                if(num[i] == 46)
+                    dot++;
+                if(num[i] == 45)
+                    minus++;
+            }
+            else
+                break;
+        }
+
+        if(check == strlen(num)){
+            return atof(num);
+            break;
+        }else{
+            printf("Incorrect input. Try another value \n");
+        }
+    }
+}
+
 int main()
 {
 
     double t, a1, a2, e, x, f_a, f_x;
-    char f;
+    int f;
 
-    printf("Enter function(1, 2):");
-    scanf("%s", &f);
+    while(1){
+        printf("Enter function(1, 2):");
+        f = int_check();
+        if(f == 1 || f == 2)
+            break;
+        else
+            printf("Function number is incorrect. Try another one");
+    }
+
     printf("Enter t: ");
-    scanf("%lf", &t);
+    t = float_check();
+
     printf("Enter a1: ");
-    scanf("%lf", &a1);
+    a1 = float_check();
+
     printf("Enter a2: ");
-    scanf("%lf", &a2);
+    a2 = float_check();
+
     printf("Enter e: ");
-    scanf("%lf", &e);
+    e = float_check();
 
     switch(f){
-        case '1':
+        case 1:
             while(fabs(a2 - a1) > e){
                 x = (a1 + a2) / 2;
                 if(func1(x,t) * func1(a1,t) > 0){
@@ -41,7 +104,7 @@ int main()
                 printf("x = %lf \n", x);
             }
             break;
-        case '2':
+        case 2:
             while(fabs(a2 - a1) > e){
                 x = (a1 + a2) / 2;
                 if(func2(x,t) * func2(a1,t) > 0){
@@ -57,7 +120,6 @@ int main()
     }
 
     printf("%lf \n", x);
-    printf("Hello");
 
     return 0;
 }
