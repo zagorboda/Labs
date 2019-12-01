@@ -4,6 +4,12 @@
 //#include <sys/stat.h> //
 #include <string.h> // To append string strncat()
 
+typedef struct record{
+    char *name[256];
+    float square;
+    int population;
+};
+
 int int_check(){
     char num[100];
     int i,check;
@@ -42,7 +48,7 @@ void create_file(){  //ACTION 1
 
 }
 
-void red_file(){
+void read_file(){
     FILE *fp;
     int MAXCHAR = 1000;
     char str[MAXCHAR];
@@ -64,23 +70,35 @@ void red_file(){
 void test(){
     FILE *fp;
     int MAXCHAR = 1000;
-    char str[MAXCHAR];
+    char *str[3][MAXCHAR];
+    char *text[3];
     char name[260];
+    int i;
     printf("Enter file name:\n");
     scanf("%s", &name);
     strncat(name, ".txt", 4);
-    if ((fp = fopen(name, "w")) == NULL){
+    /*if ((fp = fopen(name, "w")) == NULL){
         printf("Can't open file.");
     }else{
         fprintf(fp, "Hello world 1 \ntest123 \n\t54757456");
         fclose(fp);
-    }
+    }*/
 
     if ((fp = fopen(name, "r")) == NULL){
         printf("Can't open file.");
     }else{
-        while (fgets(str, MAXCHAR, fp) != NULL)
-        printf("%s", str);
+        i = 0;
+        do{
+            fscanf(fp,"%[^\n]", str[i]);
+            printf("%s\n", str[i]);
+            text[i] = str[i];
+            printf("%s\n", text[i]);
+            i++;
+        }while(fgets(str, MAXCHAR, fp) != NULL);
+        /*for(i=0;i<=2;i++){
+            text[i] = str[i+1];
+            printf("%s\n", text[i]);
+        }*/
     }
 }
 
@@ -115,7 +133,7 @@ void write_file(){
         strncat(name, ".txt", 4);
         if ((fp = fopen(name, "w")) == NULL){
             printf("Can't open file.");
-        }else{;
+        }else{
             fprintf(fp, "Hello world bla-bla blya-blya blyat");
             fclose(fp);
         }
