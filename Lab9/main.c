@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
-#include <sys/stat.h>
-
+#include <dirent.h> // For directories
+//#include <sys/stat.h> //
+#include <string.h> // To append string strncat()
 
 int int_check(){
     char num[100];
@@ -27,12 +27,48 @@ int int_check(){
     }
 }
 
+void create_file(){  //ACTION 1
+    FILE *fp;
+    char name[260];
+
+    printf("Enter file name:\n");
+    scanf("%s", &name);
+    strncat(name, ".txt", 4);
+    if ((fp = fopen(name, "w")) == NULL){
+        printf("Some problems occurred. Can't create file");
+    }else{
+        printf("File %s successfully created", name);
+    }
+
+}
+
+void red_file(){
+    FILE *fp;
+    int MAXCHAR = 1000;
+    char str[MAXCHAR];
+    char name[260];
+
+    printf("Enter file name:\n");
+    scanf("%s", &name);
+    strncat(name, ".txt", 4);
+
+    if ((fp = fopen(name, "r")) == NULL){
+        printf("Can't open file.");
+    }else{
+        while (fgets(str, MAXCHAR, fp) != NULL)
+        printf("%s", str);
+    }
+}
+
 
 void test(){
     FILE *fp;
     int MAXCHAR = 1000;
     char str[MAXCHAR];
-    char name[] = "test.txt";
+    char name[260];
+    printf("Enter file name:\n");
+    scanf("%s", &name);
+    strncat(name, ".txt", 4);
     if ((fp = fopen(name, "w")) == NULL){
         printf("Can't open file.");
     }else{
@@ -55,7 +91,7 @@ void write_file(){
     int MAXCHAR = 1000;
     char str[MAXCHAR];
 
-    printf("Enter name of the file to open it. All text file in your directory:");
+    printf("Enter name of the file to open it. All files in your directory:");
 
     struct dirent *de;  // Pointer for directory entry
     // opendir() returns a pointer of DIR type.
@@ -67,17 +103,19 @@ void write_file(){
         while ((de = readdir(dr)) != NULL){
                 //printf("%s\n", de->d_name); для виводу всіх файлів
                 size_t len = strlen(de->d_name);
-                if(len > 4 && strcmp(de->d_name + len - 4, ".txt") == 0)
+                if(len > 4 && strcmp(de->d_name + len - 4, ".txt") == 0){
+                    de->d_name[strlen(de->d_name) - 4] = '\0';
                     printf("%s\n", de->d_name);
+                }
         }
         closedir(dr);
 
         //scanf("%s", &name);
         scanf("%s", &name);
+        strncat(name, ".txt", 4);
         if ((fp = fopen(name, "w")) == NULL){
             printf("Can't open file.");
-        }else{
-            printf("Fuck");
+        }else{;
             fprintf(fp, "Hello world bla-bla blya-blya blyat");
             fclose(fp);
         }
@@ -99,14 +137,20 @@ int main(){
     int action;
 
     printf("Enter action:\n");
-    printf("1.Create test file\n");
-    printf("2.Create new file and write data\n");
+    printf("1.Create new file\n");
+    printf("2.Read data from file\n");
+    //printf("2.Create test file\n");
+    //printf("3.Create new file and write data\n");
     action = int_check();
     if(action == 1){
         system("cls");
-        test();
+        create_file();
     }
     if(action == 2){
+        system("cls");
+        test();
+    }
+    if(action == 3){
         system("cls");
         write_file();
     }
