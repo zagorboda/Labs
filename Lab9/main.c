@@ -4,11 +4,11 @@
 //#include <sys/stat.h> //
 #include <string.h> // To append string strncat()
 
-typedef struct record{
+struct record{
     char *name[256];
-    float square;
+    double square;
     int population;
-};
+}record;
 
 int int_check(){
     char num[100];
@@ -33,6 +33,36 @@ int int_check(){
     }
 }
 
+double float_check(){
+    char num[100];
+    int i,check,dot,minus;
+
+    while(1){
+        dot = 0;
+        check = 0;
+        minus = 0;
+        scanf("%s", &num);
+        for (i = 0; i < strlen(num); i++){
+            if ((num[i] == 46 || num[i] == 45 || isdigit(num[i])) && dot <=1 && minus <= 1 ){
+                check += 1;
+                if(num[i] == 46)
+                    dot += 1;
+                if(num[i] == 45)
+                    minus += 1;
+            }
+            else
+                break;
+        }
+
+        if(check == strlen(num)){
+            return atof(num);
+            break;
+        }else{
+            printf("Incorrect input. Try another value \n");
+        }
+    }
+}
+
 void create_file(){  //ACTION 1
     FILE *fp;
     char name[260];
@@ -45,6 +75,7 @@ void create_file(){  //ACTION 1
     }else{
         printf("File %s successfully created", name);
     }
+    printf("Enter records:\n"); // TODO;
 
 }
 
@@ -90,7 +121,6 @@ void test(){
         i = 0;
         do{
             fscanf(fp,"%[^\n]", str[i]);
-            printf("%s\n", str[i]);
             text[i] = str[i];
             printf("%s\n", text[i]);
             i++;
@@ -109,7 +139,7 @@ void write_file(){
     int MAXCHAR = 1000;
     char str[MAXCHAR];
 
-    printf("Enter name of the file to open it. All files in your directory:");
+    printf("Enter name of the file to open it. All files in your directory:\n");
 
     struct dirent *de;  // Pointer for directory entry
     // opendir() returns a pointer of DIR type.
@@ -134,7 +164,18 @@ void write_file(){
         if ((fp = fopen(name, "w")) == NULL){
             printf("Can't open file.");
         }else{
-            fprintf(fp, "Hello world bla-bla blya-blya blyat");
+            getchar(); // Після scanf залишається символ нової лінії \n заллишається і тригерить fgets, який одразу закривається.
+            // getchar відловлює цей символ .
+            printf("Enter region name:\n");
+            fgets(record.name, 1000, stdin);
+            printf("Enter region square:\n");
+            record.square = float_check();
+            printf("Enter region population:\n");
+            record.population = int_check();
+
+            fprintf(fp, record.name);
+            fprintf(fp, "%lf\n", record.square);
+            fprintf(fp, "%d", record.population);
             fclose(fp);
         }
 
