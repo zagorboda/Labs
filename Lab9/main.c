@@ -5,9 +5,9 @@
 #include <string.h> // To append string strncat()
 
 struct record{
-    char *name[256];
-    double square;
-    int population;
+    char *name[1000][260];
+    double square[1000];
+    int population[1000];
 }record;
 
 int int_check(){
@@ -82,18 +82,20 @@ void create_file(){  //ACTION 1
 void read_file(){
     FILE *fp;
     int MAXCHAR = 1000;
-    char str[MAXCHAR];
+    char str[253];
     char name[260];
+    char line [ 128 ];
 
     printf("Enter file name:\n");
     scanf("%s", &name);
-    strncat(name, ".txt", 4);
+    //strncat(name, ".txt", 4);
 
     if ((fp = fopen(name, "r")) == NULL){
         printf("Can't open file.");
     }else{
-        while (fgets(str, MAXCHAR, fp) != NULL)
-        printf("%s", str);
+        while ( fgets ( line, sizeof line, fp ) != NULL ){
+         fputs ( line, stdout );
+      }
     }
 }
 
@@ -162,20 +164,28 @@ void write_file(){
         scanf("%s", &name);
         strncat(name, ".txt", 4);
         if ((fp = fopen(name, "w")) == NULL){
-            printf("Can't open file.");
+            printf("Can't open file.\n");
         }else{
             getchar(); // Після scanf залишається символ нової лінії \n заллишається і тригерить fgets, який одразу закривається.
             // getchar відловлює цей символ .
-            printf("Enter region name:\n");
-            fgets(record.name, 1000, stdin);
-            printf("Enter region square:\n");
-            record.square = float_check();
-            printf("Enter region population:\n");
-            record.population = int_check();
+            int i = 0;
+            while(1){
+                printf("Enter region name:\n");
+                fgets(record.name[i], 1000, stdin);
+                printf("Enter region square :\n");
+                record.square[i] = float_check();
+                printf("Enter region population:\n");
+                record.population[i] = int_check();
 
-            fprintf(fp, record.name);
-            fprintf(fp, "%lf\n", record.square);
-            fprintf(fp, "%d", record.population);
+                fprintf(fp, record.name[i]);
+                fprintf(fp, "%lf\n", record.square[i]);
+                fprintf(fp, "%d\n", record.population[i]);
+                printf("Record number %d is written to file. Press any key to continue or 'ESC' button to finish reading data.\n", i+1);
+                i++;
+                if(getch() == 27)
+                    break;
+                getchar();
+            }
             fclose(fp);
         }
 
@@ -207,7 +217,7 @@ int main(){
     }
     if(action == 2){
         system("cls");
-        test();
+        read_file();
     }
     if(action == 3){
         system("cls");
