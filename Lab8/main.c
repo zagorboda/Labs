@@ -63,40 +63,95 @@ double float_check(){
 //struct scheme *p;
 
 void calculate(func, f_min, f_max, d_f){
-    printf("f_0 = %lf\n\n", 1/(2*M_PI*sqrt(S.L*S.C)));
+    double a,b,c,d,w, re, im;
+    if(S.L != 0 && S.C != 0){
+        printf("\nf_0 = %lf\n\n\n", 1/(2*M_PI*sqrt(S.L*S.C)));
+    }else
+        printf("Cant calculate f_0. Zero division error");
     while(f_min <= f_max){
+        w = 2 * M_PI * f_min;
         switch(func){
             case 1:
+                a = S.L/S.C;
+                b = -1 * S.r / (w*S.C);
+                c = S.r;
+                d = w*S.L - 1 / (w * S.C);
+                re = (a*c + b*d) / (c*c + d*d);
+                im = (b*c - a*d) / (c*c + d*d);
+                printf("f = %d\n", f_min);
+                // Варыант c*c + d*d == 0 не розглядаємо оскільки с - опір резистора тому > 0 ,
+                //а сума 2 додатніх чисел не може бути рівна нулю
+                if (f_min == 0 || S.C == 0){
+                    printf("Can't calculate Z . Zero division error.\n");
+                }else
+                    printf("Z = %0.14lf + i * %lf\n\n", re, im);
+                break;
+            /*case 1:
                 printf("f = %d \n\n", f_min);
                 printf("\t%lf - i*%lf \n", S.L/S.C, S.r/(S.C*2*M_PI*f_min));
                 printf("Z (%d) = --------------------\n", f_min);
                 printf("\t%lf + i*%lf\n", S.r, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
                 printf("\n\n");
-                break;
+                break;*/
 
             case 2:
-                printf("f = %d \n\n", f_min);
+                a = S.L/S.C;
+                b = S.r / (w*S.C);
+                c = S.r;
+                d = w*S.L - 1 / (w * S.C);
+                re = (a*c + b*d) / (c*c + d*d);
+                im = (b*c - a*d) / (c*c + d*d);
+                printf("f = %d\n", f_min);
+                if (f_min == 0 || S.C == 0){
+                    printf("Can't calculate Z . Zero division error.\n");
+                }else
+                    printf("Z = %lf - i*%fl\n\n", re, im);
+                break;
+                /*printf("f = %d \n\n", f_min);
                 printf("\t%lf + i*%lf \n", S.L/S.C, S.r/(S.C*2*M_PI*f_min));
                 printf("Z (%d) = --------------------\n", f_min);
                 printf("\t%lf + i*%lf\n", S.r, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
                 printf("\n\n");
-                break;
+                break;*/
 
             case 3:
-                printf("f = %d \n\n", f_min);
+                a = S.r1 * S.r2;
+                b = w * S.L - 1 / (w * S.C);
+                c = S.r1 + S.r2;
+                d = w * S.L - 1 / (w * S.C);
+                re = (a*c + b*d) / (c*c + d*d);
+                im = (b*c - a*d) / (c*c + d*d);
+                printf("f = %d\n", f_min);
+                if (f_min == 0 || S.C == 0){
+                    printf("Can't calculate Z . Zero division error.\n");
+                }else
+                    printf("Z = %lf - i*%fl\n\n", re, im);
+                break;
+                /*printf("f = %d \n\n", f_min);
                 printf("\t%lf + i*%lf \n", S.r1*S.r2, S.r1*(2*M_PI*f_min*S.L - 1/S.C*2*M_PI*f_min));
                 printf("Z (%d) = --------------------\n", f_min);
                 printf("\t%lf + i*%lf\n", S.r1 + S.r2, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
                 printf("\n\n");
-                break;
-
+                break;*/
             case 4:
-                printf("f = %d \n\n", f_min);
+                a = S.r1 * S.r2 + S.L / S.C;
+                b = w * S.L * S.r1 - S.r2 / (w * S.C);
+                c = S.r1 + S.r2;
+                d = w * S.L - 1 / (w * S.C);
+                re = (a*c + b*d) / (c*c + d*d);
+                im = (b*c - a*d) / (c*c + d*d);
+                printf("f = %d\n", f_min);
+                if (f_min == 0 || S.C == 0){
+                    printf("Can't calculate Z . Zero division error.\n");
+                }else
+                    printf("Z = %lf - i*%fl\n\n", re, im);
+                break;
+                /*printf("f = %d \n\n", f_min);
                 printf("\t%lf + i*%lf \n", S.r1*S.r2 + S.L/S.C, (2*M_PI*f_min*S.L*S.r1 - S.r2/S.C*2*M_PI*f_min));
                 printf("Z (%d) = --------------------\n", f_min);
                 printf("\t%lf + i*%lf\n", S.r1 + S.r2, 2*M_PI*f_min*S.L - 1/(S.C*2*M_PI*f_min));
                 printf("\n\n");
-                break;
+                break;*/
         }
         f_min += d_f;
     }
