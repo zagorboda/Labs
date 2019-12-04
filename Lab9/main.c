@@ -13,7 +13,8 @@ void create_file();
 void read_file();
 void write_file();
 void delete_record();
-
+void delete_file();
+void edit_record();
 
 struct record{
     char *name[1000][260];
@@ -312,14 +313,13 @@ void delete_record(){
 
         int j, number;
         number = i;
-        printf("\nNUmber is %d\n", i);
         j=0;
 
         printf("\nEnter number of record you want to delete:\n");
         int position = int_check();
 
         for(i=0;i<number;i += 3){
-            if(j == position){
+            if(j == position - 1){
                 i += 3;
             }
             strcpy(record.name[j], list[i]);
@@ -333,6 +333,7 @@ void delete_record(){
             printf("%lf\n", record.square[i]);
             printf("%d\n", record.population[i]);
         }
+        fclose(fp);
 
         /*j = 0;
         for(i=0;i<number;i += 3){
@@ -374,11 +375,19 @@ void delete_record(){
             }
         }*/
 
-        /*for(j=0;j<(i-3)/3;j++){
-            fprintf(fp, record.name[j]);
-            fprintf(fp, "%lf\n", record.square[j]);
-            fprintf(fp, "%d\n", record.population[j]);
-        }*/
+        while(1){
+            if ((fp = fopen(name, "w")) == NULL){
+                printf("Can't open file.Try another name of file:\n");
+            }else{
+                break;
+            }
+        }
+
+        for(i=0;i<number/3-1;i++){
+            fprintf(fp, record.name[i]);
+            fprintf(fp, "%lf\n", record.square[i]);
+            fprintf(fp, "%d\n", record.population[i]);
+        }
 
         printf("\nRecords are written to file\n");
         getch();
@@ -387,6 +396,154 @@ void delete_record(){
 
     system("cls");
     main();
+}
+
+void delete_file(){
+    FILE *fp;
+    char name[260];
+    char list[100][100];
+    char *addr[100];
+    int overwrite;
+    int file_exists = 0;
+
+    printf("Choose file to delete:\n");
+    struct dirent *de;
+    DIR *dr = opendir(".");
+    if (dr == NULL) {
+        printf("Could not open current directory" );
+    }else{
+        // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html  for readdir()
+        int i=0;
+        while ((de = readdir(dr)) != NULL){
+                //printf("%s\n", de->d_name); для виводу всіх файлів
+                size_t len = strlen(de->d_name);
+                if(len > 4 && strcmp(de->d_name + len - 4, ".txt") == 0){
+                    de->d_name[strlen(de->d_name) - 4] = '\0';
+                    strcpy(list[i], de->d_name);
+                    addr[i] = list[i];
+                    fputs(addr[i], stdout);
+                    printf("\n");
+                    i++;
+                }
+        }
+        scanf("%s", &name);
+        strncat(name, ".txt", 4);
+
+        if (remove(name) == 0)
+            printf("File %s deleted successfully.\n", name);
+        else
+            printf("Unable to delete the file.\n");
+
+        printf("To open main menu press any button.\n");
+        getch();
+        system("cls");
+        main();
+    }
+}
+
+void edit_record(){
+
+    FILE *fp;
+    char name[260];
+    char list[100][100];
+    char *addr[100];
+    char line[1000];
+
+    printf("Choose file to edit:\n");
+    struct dirent *de;
+    DIR *dr = opendir(".");
+    if (dr == NULL) {
+        printf("Could not open current directory" );
+    }else{
+        // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html  for readdir()
+        int i=0;
+        while ((de = readdir(dr)) != NULL){
+                //printf("%s\n", de->d_name); для виводу всіх файлів
+                size_t len = strlen(de->d_name);
+                if(len > 4 && strcmp(de->d_name + len - 4, ".txt") == 0){
+                    de->d_name[strlen(de->d_name) - 4] = '\0';
+                    strcpy(list[i], de->d_name);
+                    addr[i] = list[i];
+                    fputs(addr[i], stdout);
+                    printf("\n");
+                    i++;
+                }
+        }
+        while(1){
+            scanf("%s", &name);
+            strncat(name, ".txt", 4);
+            if ((fp = fopen(name, "r+")) == NULL){
+                printf("Can't open file.Try another name of file:\n");
+            }else{
+                break;
+            }
+        }
+
+        getchar();
+        char list[100][100];
+        char *addr[100];
+
+        i=0;
+        while ( fgets ( line, sizeof line, fp ) != NULL ){
+            strcpy(list[i], line);
+            i++;
+        }
+
+        int j = 0, number = i;
+        for(i=0;i<number;i += 3){
+            strcpy(record.name[j], list[i]);
+            record.square[j] = atof(list[i+1]);
+            record.population[j] = atoi(list[i+2]);
+            j ++;
+        }
+
+        for(i=0;i<number/3;i ++){
+            printf("\n%d.\n", i + 1);
+            printf("%s", record.name[i]);
+            printf("%lf\n", record.square[i]);
+            printf("%d\n", record.population[i]);
+        }
+
+        printf("\nEnter number of record you want to edit:\n");
+        int position = int_check();
+
+        getchar();
+
+        printf("Enter region name:\n");
+        fgets(record.name[position-1], 1000, stdin);
+        printf("Enter region square :\n");
+        record.square[position-1] = float_check();
+        printf("Enter region population:\n");
+        record.population[position-1] = int_check();
+
+        for(i=0;i<number;i += 3){
+            strcpy(record.name[j], list[i]);
+            record.square[j] = atof(list[i+1]);
+            record.population[j] = atoi(list[i+2]);
+            j ++;
+        }
+
+        for(i=0;i<number/3;i ++){
+            printf("\n%d.\n", i + 1);
+            printf("%s", record.name[i]);
+            printf("%lf\n", record.square[i]);
+            printf("%d\n", record.population[i]);
+        }
+
+        printf("\nNumber == %d\n", number);
+        fclose(fp);
+
+        if ((fp = fopen(name, "w")) == NULL){
+            printf("Some problems occurred with file processing.\n");
+        }else{
+            for(i=0;i < number/3;i++){
+            fprintf(fp, record.name[i]);
+            fprintf(fp, "%lf\n", record.square[i]);
+            fprintf(fp, "%d\n", record.population[i]);
+            }printf("Record number %d is edited in file. Press any key to continue or 'ESC' button to finish reading data.\n", i);
+        }
+        fclose(fp);
+    }
 }
 
 int main(){
@@ -399,7 +556,9 @@ int main(){
     printf("1.Create new file\n");
     printf("2.Read data from file\n");
     printf("3.Write data to file\n");
-    printf("4.Delete records from file(test)\n");
+    printf("4.Delete records from file\n");
+    printf("5.Delete file\n");
+    printf("6.Edit record\n");
     //printf("2.Create test file\n");
     //printf("3.Create new file and write data\n");
     action = int_check();
@@ -416,6 +575,12 @@ int main(){
         case 4:
             system("cls");
             delete_record();
+        case 5:
+            system("cls");
+            delete_file();
+        case 6:
+            system("cls");
+            edit_record();
     }
 
     getch();
