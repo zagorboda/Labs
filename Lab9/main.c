@@ -16,9 +16,10 @@ void delete_record();
 void delete_file();
 void edit_record();
 void sort_records();
+void append_sorted();
 
 struct record{
-    char *name[1000][260];
+    char name[1000][1000];
     double square[1000];
     int population[1000];
 }record;
@@ -188,9 +189,12 @@ void read_file(){
     }
 
     while ( fgets ( line, sizeof line, fp ) != NULL ){
-        if(i % 3 == 0)
-            printf("\n%d.\n", i/3 + 1);
-        fputs ( line, stdout );
+        if(i < 3){
+        }else{
+            if(i % 3 == 0)
+                printf("\n%d.\n", i/3);
+            fputs ( line, stdout );
+        }
         i++;
     }
 
@@ -235,7 +239,7 @@ void write_file(){
             printf("Enter file name:\n");
             scanf("%s", &name);
             strncat(name, ".txt", 4);
-            if ((fp = fopen(name, "r+")) == NULL){
+            if ((fp = fopen(name, "w")) == NULL){
                 printf("Can't open file.");
             }else{
                 break;
@@ -243,6 +247,11 @@ void write_file(){
         }
             getchar(); // Після scanf залишається символ нової лінії \n заллишається і тригерить fgets, який одразу закривається.
             // getchar відловлює цей символ .
+
+            fprintf(fp, "Lab9, Bohdan\n");
+            fprintf(fp, "0\n");
+            fprintf(fp, "0\n");
+
             int i = 0;
             while(1){
                 printf("Enter region name:\n");
@@ -325,15 +334,18 @@ void delete_record(){
         char *addr[100];
 
         while ( fgets ( line, sizeof line, fp ) != NULL ){
-            if(i % 3 == 0)
-                printf("\n%d.\n", i/3 + 1);
-            fputs ( line, stdout );
-            strcpy(list[i], line);
+            if(i < 3){}
+            else{
+                if(i % 3 == 0)
+                    printf("\n%d.\n", i/3);
+                fputs ( line, stdout );
+                strcpy(list[i-3], line);
+            }
             i++;
         }
 
         int j, number;
-        number = i;
+        number = i - 3;
         j=0;
 
         printf("\nEnter number of record you want to delete:\n");
@@ -405,6 +417,10 @@ void delete_record(){
             }
         }
 
+        fprintf(fp, "Lab9, Bohdan\n");
+        fprintf(fp, "0\n");
+        fprintf(fp, "0\n");
+
         for(i=0;i<number/3-1;i++){
             fprintf(fp, record.name[i]);
             fprintf(fp, "%lf\n", record.square[i]);
@@ -460,6 +476,7 @@ void delete_file(){
             printf("File %s deleted successfully.\n", name);
         else
             printf("Unable to delete the file.\n");
+        fclose(fp);
 
         printf("To open main menu press any button.\n");
         getch();
@@ -512,11 +529,13 @@ void edit_record(){
 
         i=0;
         while ( fgets ( line, sizeof line, fp ) != NULL ){
-            strcpy(list[i], line);
+            if(i < 3){}
+            else
+                strcpy(list[i-3], line);
             i++;
         }
 
-        int j = 0, number = i;
+        int j = 0, number = i - 3;
         for(i=0;i<number;i += 3){
             strcpy(record.name[j], list[i]);
             record.square[j] = atof(list[i+1]);
@@ -562,15 +581,25 @@ void edit_record(){
 
         fclose(fp);
 
-        if ((fp = fopen(name, "w")) == NULL){
-            printf("Some problems occurred with file processing.\n");
-        }else{
-            for(i=0;i < number/3;i++){
+        while(1){
+            if ((fp = fopen(name, "w")) == NULL){
+                printf("Can't open file.Try another name of file:\n");
+            }else{
+                break;
+            }
+        }
+
+        fprintf(fp, "Lab9, Bohdan\n");
+        fprintf(fp, "0\n");
+        fprintf(fp, "0\n");
+
+        for(i=0;i < number/3;i++){
             fprintf(fp, record.name[i]);
             fprintf(fp, "%lf\n", record.square[i]);
             fprintf(fp, "%d\n", record.population[i]);
-            }printf("Record number %d is edited in file. Press any key to continue or 'ESC' button to finish reading data.\n", i);
         }
+        printf("Record number %d is edited in file. Press any key to continue or 'ESC' button to finish reading data.\n", i);
+
         fclose(fp);
     }
 
@@ -589,6 +618,223 @@ void sort_records(){
     FILE *fp;
     char line[1000];
     int i=0;
+    char list[100][100];
+
+    printf("Enter name of the file to open it. All files in your directory:\n");
+
+    struct dirent *de;  // Pointer for directory entry
+    // opendir() returns a pointer of DIR type.
+    DIR *dr = opendir(".");
+    if (dr == NULL) { // opendir returns NULL if couldn't open directory
+        printf("Could not open current directory" );
+    }else{
+        // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html  for readdir()
+        while ((de = readdir(dr)) != NULL){
+                //printf("%s\n", de->d_name); для виводу всіх файлів
+                size_t len = strlen(de->d_name);
+                if(len > 4 && strcmp(de->d_name + len - 4, ".txt") == 0){
+                    de->d_name[strlen(de->d_name) - 4] = '\0';
+                    printf("%s\n", de->d_name);
+                }
+        }
+        closedir(dr);
+
+
+        while(1){
+            scanf("%s", &name);
+            strncat(name, ".txt", 4);
+            if ((fp = fopen(name, "r+")) == NULL){
+                printf("Can't open file.Try another name of file:\n");
+            }else{
+                break;
+            }
+        }
+
+        i=0;
+        while ( fgets ( line, sizeof line, fp ) != NULL ){
+            if(i<3){}
+            else
+                strcpy(list[i-3], line);
+            i++;
+        }
+
+        int j = 0, number = i-3;
+        for(i=0;i<number;i += 3){
+            strcpy(record.name[j], list[i]);
+            record.square[j] = atof(list[i+1]);
+            record.population[j] = atoi(list[i+2]);
+            j++;
+        }
+        for(i=0;i < number/3;i++){
+            printf("\n%d.\n", i + 1);
+            printf("%s", record.name[i]);
+            printf("%lf\n", record.square[i]);
+            printf("%d\n", record.population[i]);
+        }
+
+        printf("\n Number == %d\n", number);
+        j=0;
+
+        double c;
+        int d;
+        char e[1000];
+        int sort_operator, sort_order;
+        printf("Enter sort operator(1 - name, 2 - square, 3 - population)\n");
+        while(1){
+            sort_operator = int_check();
+            if(sort_operator == 1 || sort_operator == 2 || sort_operator == 3){
+                break;
+            }else
+                printf("Incorrect sort operator");
+        }
+        printf("Enter sort order(1 : '+',2 : '-')\n");
+        while(1){
+            sort_order = int_check();
+            if(sort_order == 1 || sort_order == 2){
+                break;
+            }else
+                printf("Incorrect sort order");
+        }
+        for (i = 0; i < number/3; i++){
+            for (j = i + 1; j < number/3; j++){
+                switch(sort_operator){
+                    case 1:
+                        if(sort_order == 1){
+                            if (strcmp(record.name[i], record.name[j]) > 0){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        else{
+                            if (strcmp(record.name[i], record.name[j]) < 0){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        break;
+
+                    case 2:
+                        if(sort_order == 1){
+                            if (record.square[i] > record.square[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        else{
+                            if (record.square[i] < record.square[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        if(sort_order == 1){
+                            if (record.population[i] > record.population[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        else{
+                            if (record.population[i] < record.population[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        break;
+
+                }
+            }
+        }
+
+        fclose(fp);
+
+        /*for(i=0;i < number/2;i++){
+            printf("\n%d.\n", i + 1);
+            printf("%s\n", record.name[i]);
+            printf("%lf\n", record.square[i]);
+            printf("%d\n", record.population[i]);
+        }*/
+
+        while(1){
+            if ((fp = fopen(name, "w")) == NULL){
+                printf("Some problems occurred while operating file:\n");
+            }else{
+                break;
+            }
+        }
+
+        fprintf(fp, "Lab9, Bohdan\n");
+        fprintf(fp, "%d\n", sort_operator);
+        fprintf(fp, "%d\n", sort_order);
+
+        for(i=0;i < number/3;i++){
+            fprintf(fp, "%s", record.name[i]);
+            fprintf(fp, "%lf\n", record.square[i]);
+            fprintf(fp, "%d\n", record.population[i]);
+        }
+
+        fclose(fp);
+    }
+
+    printf("To continue press any button. To open main menu press ESC button.\n");
+    if(getch() == 27){
+        system("cls");
+        main();
+    }else{
+        system("cls");
+        sort_records();
+    }
+}
+
+void append_sorted(){
+    char name[260];
+    FILE *fp;
+    char line[1000];
+    int i=0;
+    char list[100][100];
 
     printf("Enter name of the file to open it. All files in your directory:\n");
 
@@ -612,43 +858,177 @@ void sort_records(){
         while(1){
             scanf("%s", &name);
             strncat(name, ".txt", 4);
-            if ((fp = fopen(name, "r+")) == NULL){
+            if ((fp = fopen(name, "r")) == NULL){
                 printf("Can't open file.Try another name of file:\n");
             }else{
                 break;
             }
         }
-        getchar();
 
-        char list[100][100];
-        char *addr[100];
-
+        i=0;
+        int sort_operator, sort_order;
         while ( fgets ( line, sizeof line, fp ) != NULL ){
-            if(i % 3 == 0)
-                printf("\n%d.\n", i/3 + 1);
-            fputs ( line, stdout );
-            strcpy(list[i], line);
+            if(i<3){
+                if(i == 1){
+                    sort_operator = atoi(line);
+                }
+                if(i == 2){
+                    sort_order = atoi(line);
+                }
+            }
+            else
+                strcpy(list[i-3], line);
             i++;
         }
 
-        int j, number;
-        number = i;
-        j=0;
-        int sort_operator=0, sort_order=0;
-
-        printf("Enter sorting operator(1 - name;2 - square; 3 - population)");
-        while(1){
-            sort_operator = int_check();
-            if(sort_operator == 1 || sort_operator == 2 || sort_operator == 3)
-                break;
+        int j = 0, number = i-3;
+        for(i=0;i<number;i += 3){
+            strcpy(record.name[j], list[i]);
+            record.square[j] = atof(list[i+1]);
+            record.population[j] = atoi(list[i+2]);
+            j++;
         }
-        printf("Enter order to sort(1 - ''+'',2 - ''-'')");
-        while(1){
-            sort_order = int_check();
-            if(sort_order == 1 || sort_order == 2)
-                break;
+        for(i=0;i < number/3;i++){
+            printf("\n%d.\n", i + 1);
+            printf("%s", record.name[i]);
+            printf("%lf\n", record.square[i]);
+            printf("%d\n", record.population[i]);
         }
 
+        printf("Enter region name:\n");
+        do{
+            fgets(record.name[number/3], 1000, stdin);
+        }while(strlen(record.name[number/3]) <= 1);// Використовуєм 1 замість нуля оскільки є нульовий байт \0
+        printf("Enter region square :\n");
+        record.square[number/3] = float_check();
+        printf("Enter region population:\n");
+        record.population[number/3] = int_check();
+
+        double c;
+        int d;
+        char e[1000];
+
+        for (i = 0; i < number/3 + 1; i++){
+            for (j = i + 1; j < number/3 + 1; j++){
+                switch(sort_operator){
+                    case 1:
+                        if(sort_order == 1){
+                            if (strcmp(record.name[i], record.name[j]) > 0){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        else{
+                            if (strcmp(record.name[i], record.name[j]) < 0){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        break;
+
+                    case 2:
+                        if(sort_order == 1){
+                            if (record.square[i] > record.square[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        else{
+                            if (record.square[i] < record.square[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        if(sort_order == 1){
+                            if (record.population[i] > record.population[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        else{
+                            if (record.population[i] < record.population[j]){
+                                strcpy(e, record.name[i]);
+                                strcpy(record.name[i], record.name[j]);
+                                strcpy(record.name[j]   , e);
+                                c =  record.square[i];
+                                record.square[i] = record.square[j];
+                                record.square[j] = c;
+                                d =  record.population[i];
+                                record.population[i] = record.population[j];
+                                record.population[j] = d;
+                            }
+                        }
+                        break;
+
+                }
+            }
+        }
+
+        fclose(fp);
+
+        for(i=0;i < number/3 + 1;i++){
+            printf("%s", record.name[i]);
+            printf("%lf\n", record.square[i]);
+            printf("%d\n", record.population[i]);
+        }
+
+        while(1){
+            if ((fp = fopen(name, "w")) == NULL){
+                printf("Some problems occurred while operating with file:\n");
+            }else{
+                break;
+            }
+        }
+
+        fprintf(fp, "Lab9, Bohdan\n");
+        fprintf(fp, "%d\n", sort_operator);
+        fprintf(fp, "%d\n", sort_order);
+
+        for(i=0;i < number/3 + 1;i++){
+            fprintf(fp, record.name[i]);
+            fprintf(fp, "%lf\n", record.square[i]);
+            fprintf(fp, "%d\n", record.population[i]);
+        }
+
+        fclose(fp);
     }
 }
 
@@ -664,6 +1044,7 @@ int main(){
     printf("5.Delete file\n");
     printf("6.Edit record\n");
     printf("7.Sort records\n");
+    printf("8.Append record to sorted file\n");
     action = int_check();
     switch(action){
         case 1:
@@ -687,8 +1068,18 @@ int main(){
         case 7:
             system("cls");
             sort_records();
+        case 8:
+            system("cls");
+            append_sorted();
     }
 
     getch();
     return 0;
 }
+
+/*void sort(char **a,char **b){
+	char *c;
+	c=*a;
+	*a=*b;
+	*b=c;
+}*/
