@@ -1072,7 +1072,6 @@ int main(){
             system("cls");
             append_sorted();
     }
-
     getch();
     return 0;
 }
