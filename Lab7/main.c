@@ -2,12 +2,20 @@
 #include <stdlib.h>
 #include <math.h>
 
-double func1(float c, float t){
+double func1(double c, double t){
     return (cos(t / c) - 2*sin(1/c) + 1/c);
 }
 
-double func2(float c, float t){
-    return (sin(log(c) - cos(log(c)) + t*log(c)));
+double func2(double c, double t){
+    return (sin(log(c))-cos(log(c))+t*log(c));
+}
+
+double derivative(double c, double t){
+    return ( sin(log(c))/c + cos(log(c))/c + t/c + log(c) );
+}
+
+double second_derivative(double c, double t){
+    return ( -sin(log(c))/(c*c) + cos(log(c))/(c*c) - t/(c*c) + 1/c );
 }
 
 int int_check(){
@@ -18,7 +26,7 @@ int int_check(){
         scanf("%s", &num);
             for (i = 0; i < strlen(num); i++){
                 if (isdigit(num[i])){
-                    check += 1;
+                    check ++;
                 }
                 else
                     break;
@@ -26,7 +34,6 @@ int int_check(){
 
             if(check == strlen(num) && atoi(num) >= 0){
                 return atoi(num);
-                break;
             }else{
                 printf("Incorrect input. Try another value \n");
             }
@@ -44,7 +51,7 @@ double float_check(){
         scanf("%s", &num);
         for (i = 0; i < strlen(num); i++){
             if ((num[i] == 45 || num[i] == 46 || isdigit(num[i])) && dot <=1 && minus <=1){
-                check += 1;
+                check ++;
                 if(num[i] == 46)
                     dot++;
                 if(num[i] == 45)
@@ -56,7 +63,6 @@ double float_check(){
 
         if(check == strlen(num)){
             return atof(num);
-            break;
         }else{
             printf("Incorrect input. Try another value \n");
         }
@@ -90,10 +96,15 @@ int main()
     printf("Enter e: ");
     e = float_check();
 
+    double delta, xp;
+
     switch(f){
         case 1:
             while(fabs(a2 - a1) > e){
                 x = (a1 + a2) / 2;
+                if(func1(x, t) == 0){
+                    break;
+                }
                 if(func1(x,t) * func1(a1,t) > 0){
                     a1 = x;
                     printf("a = %lf \n", a1);
@@ -101,12 +112,42 @@ int main()
                     a2 = x;
                     printf("b = %lf \n", a2);
                 }
-                printf("x = %lf \n", x);
+                printf("x = %lf \n\n", x);
             }
             break;
         case 2:
-            while(fabs(a2 - a1) > e){
-                x = (a1 + a2) / 2;
+            if(func2(a1, t) * second_derivative(a1, t) > 0)
+                x = a1;
+            if(func2(a2, t) * second_derivative(a2, t) > 0)
+                x = a2;
+            //x = func2(a2, t);
+            //printf("x1 = %lf \n", x);
+            do{
+                xp = x;
+
+                x = xp - func2(xp, t) / derivative(xp, t);
+                printf("x = %lf \n", x);
+
+                /*x = a2 - func2(a2, t) / derivative(a2, t);
+                delta = func2(a2, t) - x;
+                a2 = a2 - func2(a2, t) / derivative(a2, t);*/
+
+                /*delta = func(a1+x, t) - func2(x, t);
+                printf("delta = %lf \n", delta);
+                x = x - delta;*/
+
+                /*x = a2 - func2(a2, t) / derivative(a2, t);
+                a2 = x;
+
+                printf("x = %lf \n", x);
+                printf("b = %lf \n", a2);*/
+
+
+
+                /*x = (a1 + a2) / 2;
+                if(func2(x, t) == 0){
+                    break;
+                }
                 if(func2(x,t) * func2(a1,t) > 0){
                     a1 = x;
                     printf("a = %lf \n", a1);
@@ -114,12 +155,14 @@ int main()
                     a2 = x;
                     printf("b = %lf \n", a2);
                 }
-                printf("x = %lf \n", x);
-            }
+                printf("x = %lf \n", x);*/
+            }while(fabs(x - xp) > e);//func2(a2, t) / derivative(a2, t) > e
+            printf("x = %lf \n", x);
             break;
     }
 
     printf("%lf \n", x);
+
 
     return 0;
 }
