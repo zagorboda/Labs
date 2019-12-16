@@ -10,13 +10,25 @@ double func2(double c, double t){
     return (sin(log(c))-cos(log(c))+t*log(c));
 }
 
-double derivative(double c, double t){
-    return ( sin(log(c))/c + cos(log(c))/c + t/c + log(c) );
+double derivative1(double c, double t){
+    return ((t/c*c)*sin(t/c) + (2/c*c)*cos(1/c) - 1/c*c);
 }
 
-double second_derivative(double c, double t){
+double second_derivative1(double c, double t){
     return ( -sin(log(c))/(c*c) + cos(log(c))/(c*c) - t/(c*c) + 1/c );
 }
+
+double derivative2(double c, double t){
+    return ((-t*t/c*c*c*c)*cos(t/c) - (2/c*c*c*c)*sin(1/c) + 2/c*c*c);
+}
+
+double second_derivative2(double c, double t){
+    return ( -sin(log(c))/(c*c) + cos(log(c))/(c*c) - t/(c*c) + 1/c );
+}
+
+/*double second_derivative2(double c, double t){
+    return  (( (-sin(log(c)))/c + (cos(log(c)) - sin(log(c))) / c + 1 - t/c) / c );
+}*/
 
 int int_check(){
     char num[100];
@@ -100,7 +112,7 @@ int main()
 
     switch(f){
         case 1:
-            while(fabs(a2 - a1) > e){
+            /*while(fabs(a2 - a1) > e){
                 x = (a1 + a2) / 2;
                 if(func1(x, t) == 0){
                     break;
@@ -113,19 +125,35 @@ int main()
                     printf("b = %lf \n", a2);
                 }
                 printf("x = %lf \n\n", x);
-            }
+            }*/
+
+
+
+            if(func1(a1, t) * second_derivative1(a1, t) > 0)
+                x = a1;
+            if(func1(a2, t) * second_derivative1(a2, t) > 0)
+                x = a2;
+            //x = func2(a2, t);
+            //printf("x1 = %lf \n", x);
+            do{
+                xp = x;
+                x = xp - func1(xp, t) / derivative1(xp, t);
+                printf("x = %lf \n", x);
+            }while(fabs(x - xp) > e);//func2(a2, t) / derivative(a2, t) > e
+            printf("x = %lf \n", x);
+
             break;
         case 2:
-            if(func2(a1, t) * second_derivative(a1, t) > 0)
+            if(func2(a1, t) * second_derivative2(a1, t) > 0)
                 x = a1;
-            if(func2(a2, t) * second_derivative(a2, t) > 0)
+            if(func2(a2, t) * second_derivative2(a2, t) > 0)
                 x = a2;
             //x = func2(a2, t);
             //printf("x1 = %lf \n", x);
             do{
                 xp = x;
 
-                x = xp - func2(xp, t) / derivative(xp, t);
+                x = xp - func2(xp, t) / derivative2(xp, t);
                 printf("x = %lf \n", x);
 
                 /*x = a2 - func2(a2, t) / derivative(a2, t);
