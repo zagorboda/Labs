@@ -5,7 +5,6 @@
 #include <string.h> // To append string strncat()
 //В сі немає файлів , але є потоки
 
-
 int int_check();
 double float_check();
 void create_file();
@@ -100,7 +99,9 @@ void create_file(){
                     i++;
                 }
         }
-        scanf("%s", &name);
+
+        fflush(stdin);
+        scanf("%[^\n]", &name);
         int j;
         for(j=0;j<i;j++){
             if(strcmp(name, addr[j]) == 0){
@@ -172,8 +173,8 @@ void read_file(){
 
     while(1){
         printf("Enter file name:\n");
-        scanf("%s", &name);
         fflush(stdin);
+        scanf("%[^\n]", &name);
         strncat(name, ".txt", 4);
         if ((fp = fopen(name, "r")) == NULL){
             printf("Can't open file.");
@@ -273,7 +274,8 @@ void write_file(){
 
         while(1){
             printf("Enter file name:\n");
-            scanf("%s", &name);
+            fflush(stdin);
+            scanf("%[^\n]", &name);
             strncat(name, ".txt", 4);
             if ((fp = fopen(name, "r+")) == NULL){
                 printf("Can't open file.");
@@ -389,7 +391,8 @@ void delete_record(){
         closedir(dr);
 
         while(1){
-            scanf("%s", &name);
+            fflush(stdin);
+            scanf("%[^\n]", &name);
             strncat(name, ".txt", 4);
             if ((fp = fopen(name, "r+")) == NULL){
                 printf("Can't open file.Try another name of file:\n");
@@ -416,8 +419,6 @@ void delete_record(){
                 }
         }
         fseek(fp, 0, SEEK_SET);
-
-
 
         char list[100][100];
         char *addr[100];
@@ -549,7 +550,8 @@ void delete_file(){
                 }
         }
 
-        scanf("%s", &name);
+        fflush(stdin);
+        scanf("%[^\n]", &name);
         strncat(name, ".txt", 4);
 
         if ((fp = fopen(name, "r")) == NULL){
@@ -605,14 +607,11 @@ void delete_file(){
 
         fclose(fp);
 
-
-        printf("\nFile is deleting\n");
         if (remove(name) == 0){
             printf("File %s deleted successfully.\n", name);
         }else{
             printf("Unable to delete the file.\n");
         }
-
 
         printf("To open main menu press any button.\n");
         getch();
@@ -650,7 +649,8 @@ void edit_record(){
                 }
         }
         while(1){
-            scanf("%s", &name);
+            fflush(stdin);
+            scanf("%[^\n]", &name);
             strncat(name, ".txt", 4);
             if ((fp = fopen(name, "r+")) == NULL){
                 printf("Can't open file.Try another name of file:\n");
@@ -697,7 +697,6 @@ void edit_record(){
             }
         }
 
-
         char list[100][100];
         char *addr[100];
 
@@ -729,7 +728,7 @@ void edit_record(){
                 printf("Population : %d\n", record  .population[i]);
             }
 
-            int position = 1002;
+            int position;
             printf("\nEnter number of record you want to edit:\n");
             do{
                 position = int_check();
@@ -823,7 +822,8 @@ void sort_records(){
 
 
         while(1){
-            scanf("%s", &name);
+            fflush(stdin);
+            scanf("%[^\n]", &name);
             fflush(stdin);
             strncat(name, ".txt", 4);
             if ((fp = fopen(name, "r+")) == NULL){
@@ -1077,7 +1077,8 @@ void append_sorted(){
         closedir(dr);
 
         while(1){
-            scanf("%s", &name);
+            fflush(stdin);
+            scanf("%[^\n]", &name);
             fflush(stdin);
             strncat(name, ".txt", 4);
             if ((fp = fopen(name, "r")) == NULL){
@@ -1103,7 +1104,6 @@ void append_sorted(){
                     append_sorted();
                 }
         }
-
 
         i=0;
         int sort_operator, sort_order;
@@ -1146,11 +1146,9 @@ void append_sorted(){
                     }
                     if(i == 1){
                         sort_operator = atoi(line);
-                        printf("Sort operator = %d\n", sort_operator);
                     }
                     if(i == 2){
                         sort_order = atoi(line);
-                        printf("sort_order = %d\n", sort_order);
                     }
                 }else{
                     strcpy(list[i-3], line);
@@ -1308,10 +1306,6 @@ void append_sorted(){
 
             fclose(fp);
 
-
-
-
-
         printf("To continue press any button.To open main menu pres ESC button.\n");
         if(getch() == 27){
             system("cls");
@@ -1319,8 +1313,7 @@ void append_sorted(){
         }else{
             system("cls");
             append_sorted();
-    }
-
+        }
     }
 }
 
