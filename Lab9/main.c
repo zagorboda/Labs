@@ -20,7 +20,7 @@ void append_sorted();
 struct record{
     char name[1000][1000];
     double square[1000];
-    int population[1000];
+    unsigned long int population[1000];
 }record;
 
 int int_check(){
@@ -37,7 +37,7 @@ int int_check(){
                     break;
             }
 
-            if(check == strlen(num) && atoi(num) >= 0){
+            if(check == strlen(num) && atoi(num) > 0){
                 return atoi(num);
                 break;
             }else{
@@ -48,26 +48,23 @@ int int_check(){
 
 double float_check(){
     char num[100];
-    int i,check,dot,minus;
+    int i,check,dot;
 
     while(1){
         dot = 0;
         check = 0;
-        minus = 0;
         scanf("%s", &num);
         for (i = 0; i < strlen(num); i++){
-            if ((num[i] == 46 || num[i] == 45 || isdigit(num[i])) && dot <=1 && minus <= 1 ){
+            if ((num[i] == 46 || isdigit(num[i])) && dot <=1){
                 check += 1;
                 if(num[i] == 46)
                     dot += 1;
-                if(num[i] == 45)
-                    minus += 1;
             }
             else
                 break;
         }
 
-        if(check == strlen(num)){
+        if(check == strlen(num) && atof(num) > 0){
             return atof(num);
             break;
         }else{
@@ -134,6 +131,12 @@ void create_file(){
         }
     }
 
+    fprintf(fp, "Lab9\n");
+    fprintf(fp, "0\n");
+    fprintf(fp, "0\n");
+
+    fclose(fp);
+
     printf("To open main menu press any button.\n");
     getch();
     system("cls");
@@ -179,16 +182,41 @@ void read_file(){
         }
     }
 
+
     fseek (fp, 0, SEEK_END);
     int size = ftell(fp);
 
     if (0 == size) {
-        printf("file is empty\n");
+            printf("\n !File is not your . You can't operate it.!\n");
+            printf("\nTo read another file press any button. To open main menu press ESC button.\n");
+            if(getch() == 27){
+                system("cls");
+                fclose(fp);
+                main();
+            }else{
+                system("cls");
+                fclose(fp);
+                read_file();
+            }
     }
     fseek(fp, 0, SEEK_SET);
 
     while ( fgets ( line, sizeof line, fp ) != NULL ){
-        if(i < 3){}
+        if(i < 3){
+            if(i == 0){
+                if (strcmp(line, "Lab9\n") != 0){
+                    printf("\n !File is not your . You can't operate it.!\n");
+                    printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                    if(getch() == 27){
+                        system("cls");
+                        main();
+                    }else{
+                        system("cls");
+                        read_file();
+                    }
+                }
+            }
+        }
         else{
             if(i % 3 == 0)
                 printf("\n%d.\n", i/3);
@@ -255,7 +283,50 @@ void write_file(){
         }
         getchar();
 
-        fprintf(fp, "Lab9, Bohdan\n");
+        fseek (fp, 0, SEEK_END);
+        int size = ftell(fp);
+
+        if (0 == size) {
+                printf("\n !File is not your . You can't operate it.! \n");
+                printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                if(getch() == 27){
+                    system("cls");
+                    fclose(fp);
+                    main();
+                }else{
+                    system("cls");
+                    fclose(fp);
+                    write_file();
+                }
+        }
+        fseek(fp, 0, SEEK_SET);
+
+        char line[1000];
+        while ( fgets ( line, sizeof line, fp ) != NULL ){
+                    if (strcmp(line, "Lab9\n") != 0){
+                        printf("\n !File is not your . You can't operate it. !\n");
+                        printf("\nTo delete another file press any button. To open main menu press ESC button.\n");
+                        if(getch() == 27){
+                            system("cls");
+                            fclose(fp);
+                            main();
+                        }else{
+                            system("cls");
+                            fclose(fp);
+                            write_file();
+                        }
+                    }else{
+                        break;
+                    }
+        }
+
+        fclose(fp);
+
+        if ((fp = fopen(name, "w")) == NULL){
+                printf("Some problems occurred while operating file.");
+        }
+
+        fprintf(fp, "Lab9\n");
         fprintf(fp, "0\n");
         fprintf(fp, "0\n");
 
@@ -328,12 +399,47 @@ void delete_record(){
         }
         getchar();
 
+        fseek (fp, 0, SEEK_END);
+        int size = ftell(fp);
+
+        if (0 == size) {
+                printf("\n !File is not your . You can't operate it.! \n");
+                printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                if(getch() == 27){
+                    system("cls");
+                    fclose(fp);
+                    main();
+                }else{
+                    system("cls");
+                    fclose(fp);
+                    delete_record();
+                }
+        }
+        fseek(fp, 0, SEEK_SET);
+
+
+
         char list[100][100];
         char *addr[100];
 
         while ( fgets ( line, sizeof line, fp ) != NULL ){
-            if(i < 3){}
-            else{
+            if(i < 3){
+                if(i == 0){
+                    if (strcmp(line, "Lab9\n") != 0){
+                        printf("\n !File is not your . You can't operate it. !\n");
+                        printf("\nTo delete another file press any button. To open main menu press ESC button.\n");
+                        if(getch() == 27){
+                            system("cls");
+                            fclose(fp);
+                            main();
+                        }else{
+                            system("cls");
+                            fclose(fp);
+                            delete_record();
+                        }
+                    }
+                }
+            }else{
                 if(i % 3 == 0)
                     printf("\n%d.\n", i/3);
                 if((i + 3) % 3 == 0){
@@ -388,7 +494,7 @@ void delete_record(){
                 }
             }
 
-            fprintf(fp, "Lab9, Bohdan\n");
+            fprintf(fp, "Lab9\n");
             fprintf(fp, "0\n");
             fprintf(fp, "0\n");
 
@@ -420,6 +526,7 @@ void delete_file(){
     char *addr[100];
     int overwrite;
     int file_exists = 0;
+    char line[1000];
 
     printf("Choose file to delete:\n");
     struct dirent *de;
@@ -445,10 +552,67 @@ void delete_file(){
         scanf("%s", &name);
         strncat(name, ".txt", 4);
 
-        if (remove(name) == 0)
+        if ((fp = fopen(name, "r")) == NULL){
+            printf("Unable to open this file.");
+            printf("To open another file press any key.To open main menu press ESC button.\n");
+            if(getch() == 27){
+                system("cls");
+                main();
+            }else{
+                system("cls");
+                delete_file();
+            }
+        }
+
+        int check=0;
+
+        fseek (fp, 0, SEEK_END);
+        int size = ftell(fp);
+
+        if (0 == size) {
+                printf("\n !File is not your . You can't delete it.! 1\n");
+                printf("\nTo delete another file press any button. To open main menu press ESC button.\n");
+                if(getch() == 27){
+                    system("cls");
+                    fclose(fp);
+                    main();
+                }else{
+                    system("cls");
+                    fclose(fp);
+                    delete_file();
+                }
+        }
+        fseek(fp, 0, SEEK_SET);
+
+        i = 0;
+        while ( fgets ( line, sizeof line, fp ) != NULL ){
+                    if (strcmp(line, "Lab9\n") != 0){
+                        printf("\n !File is not your . You can't delete it.!\n");
+                        printf("\nTo delete another file press any button. To open main menu press ESC button.\n");
+                        if(getch() == 27){
+                            system("cls");
+                            fclose(fp);
+                            main();
+                        }else{
+                            system("cls");
+                            fclose(fp);
+                            delete_file();
+                        }
+                    }else{
+                        break;
+                    }
+        }
+
+        fclose(fp);
+
+
+        printf("\nFile is deleting\n");
+        if (remove(name) == 0){
             printf("File %s deleted successfully.\n", name);
-        else
+        }else{
             printf("Unable to delete the file.\n");
+        }
+
 
         printf("To open main menu press any button.\n");
         getch();
@@ -496,9 +660,48 @@ void edit_record(){
         }
 
         getchar();
+
+        fseek (fp, 0, SEEK_END);
+        int size = ftell(fp);
+
+        if (0 == size) {
+                printf("\n !File is not your . You can't operate it.! \n");
+                printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                if(getch() == 27){
+                    system("cls");
+                    fclose(fp);
+                    main();
+                }else{
+                    system("cls");
+                    fclose(fp);
+                    edit_record();
+                }
+        }
+        fseek(fp, 0, SEEK_SET);
+
+        while ( fgets ( line, sizeof line, fp ) != NULL ){
+            if (strcmp(line, "Lab9\n") != 0){
+                printf("\n !File is not your . You can't operate it.!\n");
+                printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                if(getch() == 27){
+                    system("cls");
+                    fclose(fp);
+                    main();
+                }else{
+                    system("cls");
+                    fclose(fp);
+                    edit_record();
+                }
+            }else{
+                break;
+            }
+        }
+
+
         char list[100][100];
         char *addr[100];
 
+        fseek(fp, 0, SEEK_SET);
         i=0;
         while ( fgets ( line, sizeof line, fp ) != NULL ){
             if(i < 3){}
@@ -568,7 +771,7 @@ void edit_record(){
                 }
             }
 
-            fprintf(fp, "Lab9, Bohdan\n");
+            fprintf(fp, "Lab9\n");
             fprintf(fp, "0\n");
             fprintf(fp, "0\n");
 
@@ -630,11 +833,44 @@ void sort_records(){
             }
         }
 
-        i=0;
+        fseek (fp, 0, SEEK_END);
+        int size = ftell(fp);
 
+        if (0 == size) {
+                printf("\n !File is not your . You can't operate it.! \n");
+                printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                if(getch() == 27){
+                    system("cls");
+                    fclose(fp);
+                    main();
+                }else{
+                    system("cls");
+                    fclose(fp);
+                    sort_records();
+                }
+        }
+        fseek(fp, 0, SEEK_SET);
+
+
+        i=0;
         while ( fgets ( line, sizeof line, fp ) != NULL ){
-            if(i<3){}
-            else{
+            if(i<3){
+                if(i == 0){
+                    if (strcmp(line, "Lab9\n") != 0){
+                            printf("\n !File is not your . You can't operate it.!\n");
+                            printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                            if(getch() == 27){
+                                system("cls");
+                                fclose(fp);
+                                main();
+                            }else{
+                                system("cls");
+                                fclose(fp);
+                                sort_records();
+                            }
+                    }
+                }
+            }else{
                 strcpy(list[i-3], line);
             }
             i++;
@@ -643,8 +879,6 @@ void sort_records(){
             printf("File %s is empty.Try another one.\n\n", name);
             sort_records();
         }else{
-
-
             int j = 0, number = i-3;
             for(i=0;i<number;i += 3){
                 strcpy(record.name[j], list[i]);
@@ -790,7 +1024,7 @@ void sort_records(){
             }
         }
 
-        fprintf(fp, "Lab9, Bohdan\n");
+        fprintf(fp, "Lab9\n");
         fprintf(fp, "%d\n", sort_operator);
         fprintf(fp, "%d\n", sort_order);
 
@@ -853,29 +1087,74 @@ void append_sorted(){
             }
         }
 
-        i=0;
-        int sort_operator, sort_order;
-
         fseek (fp, 0, SEEK_END);
         int size = ftell(fp);
 
         if (0 == size) {
-            printf("file is empty\n");
-        }else{
+                printf("\n !File is not your . You can't operate it.! \n");
+                printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                if(getch() == 27){
+                    system("cls");
+                    fclose(fp);
+                    main();
+                }else{
+                    system("cls");
+                    fclose(fp);
+                    append_sorted();
+                }
+        }
 
+
+        i=0;
+        int sort_operator, sort_order;
 
             fseek(fp, 0, SEEK_SET);
             while ( fgets ( line, sizeof line, fp ) != NULL ){
-                if(i<3){
+                if(i < 3){
+                    if(i == 0){
+                        if (strcmp(line, "Lab9\n") != 0){
+                            printf("\n !File is not your . You can't operate it.!\n");
+                            printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                            if(getch() == 27){
+                                system("cls");
+                                fclose(fp);
+                                main();
+                            }else{
+                                system("cls");
+                                fclose(fp);
+                                append_sorted();
+                            }
+                        }/*else{
+                            fseek (fp, 0, SEEK_END);
+                            int size = ftell(fp);
+
+                            if (0 == size) {
+                                printf("File is empty.\n");
+                                printf("\nTo open another file press any button. To open main menu press ESC button.\n");
+                                if(getch() == 27){
+                                    system("cls");
+                                    fclose(fp);
+                                    main();
+                                }else{
+                                    system("cls");
+                                    fclose(fp);
+                                    append_sorted();
+                                }
+                            }
+                            //fseek(fp, 0, SEEK_SET);
+                        }*/
+                    }
                     if(i == 1){
                         sort_operator = atoi(line);
+                        printf("Sort operator = %d\n", sort_operator);
                     }
                     if(i == 2){
                         sort_order = atoi(line);
+                        printf("sort_order = %d\n", sort_order);
                     }
-                }
-                else
+                }else{
                     strcpy(list[i-3], line);
+                }
                 i++;
             }
 
@@ -1017,7 +1296,7 @@ void append_sorted(){
                 }
             }
 
-            fprintf(fp, "Lab9, Bohdan\n");
+            fprintf(fp, "Lab9\n");
             fprintf(fp, "%d\n", sort_operator);
             fprintf(fp, "%d\n", sort_order);
 
@@ -1029,7 +1308,7 @@ void append_sorted(){
 
             fclose(fp);
 
-        }
+
 
 
 
@@ -1049,7 +1328,7 @@ int main(){
     //system("chcp 1251"); //Підтримка кирилиці
     int action;
 
-    printf("Enter action(To exit program enter 0):\n");
+    printf("Enter action:\n");
     printf("1.Create new file\n");
     printf("2.Read data from file\n");
     printf("3.Write data to file\n");
@@ -1058,10 +1337,10 @@ int main(){
     printf("6.Edit record\n");
     printf("7.Sort records\n");
     printf("8.Append record to sorted file\n");
-    action = int_check();
+    do{
+        action = int_check();
+    }while(action < 0 || action > 8);
     switch(action){
-        case 0:
-            break;
         case 1:
             system("cls");
             create_file();
